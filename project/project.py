@@ -10,14 +10,20 @@ class File:
 
     def __init__(self, path):
         self.path = path
+        self.name = None
+        self.absolute = None
         self.is_file = None
         self.is_dir = None
         self.size = None
+        self.real_size = None
         self.characters = None
         self.lines = None
         self.functions = None
         self.platform = None
         self.created_time = None
+        self.filesystem = None
+        self.creator = None
+        self.type = None
 
     @property
     def path(self):
@@ -33,11 +39,29 @@ class File:
 
     def __get_info(self, path: PosixPath):
         stats = path.stat()
+        self.name = path.name
+        self.absolute = path.absolute()
         self.is_file = path.is_file()
         self.is_dir = path.is_dir()
         self.size = stats.st_size
+        self.real_size = stats.st_rsize
         self.platform = stats.st_ino
         self.created_time = stats.st_birthtime
+        self.filesystem = stats.st_fstype
+        self.creator = stats.st_creator
+        self.type = stats.st_type
+
+    def __str__(self):
+        return f'File {self.path}\n' \
+               f'Name: {self.name}\n' \
+               f'Absolute: {self.absolute}\n' \
+               f'Type: {self.type}' \
+               f'File: {self.is_file}, Dir: {self.is_dir}\n' \
+               f'Size: {self.size}, Real size: {self.real_size}\n' \
+               f'Platform: {self.platform}\n' \
+               f'Creator: {self.creator}\n' \
+               f'Created: {self.created_time}\n' \
+               f'Filesystem: {self.filesystem}\n'
 
 
 class Project:
